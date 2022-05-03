@@ -11,17 +11,10 @@ async function main () {
 	for (let i in accounts) {
 		accountArray.push(accounts[i].address);
 	}
-	console.log("array: ", accountArray);
 	const leaves = accountArray.map(account => ethers.utils.keccak256(account));
-	console.log("leaves: ", leaves);
 
-	const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
-	console.log("listAccount:", await provider.listAccounts());
-
-	
 	const tree = new MerkleTree(leaves, ethers.utils.keccak256, { sort: true });
 	const treeRoot = tree.getHexRoot();
-	console.log("root: ", treeRoot);
 	
 	const mtaContractFactory = await ethers.getContractFactory('MerkleTreeAuth');
 	const mtaContract = await mtaContractFactory.deploy(treeRoot);
